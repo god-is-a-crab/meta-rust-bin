@@ -17,6 +17,8 @@ export RUST_BACKTRACE = "1"
 B = "${WORKDIR}/target"
 export CARGO_TARGET_DIR = "${B}"
 
+CARGO_MAKE_ENABLED ?= "0"
+
 RUST_TARGET = "${@rust_target(d, 'TARGET')}"
 RUST_BUILD = "${@rust_target(d, 'BUILD')}"
 
@@ -129,6 +131,10 @@ cargo_bin_do_compile() {
     bbnote "which cargo:" `which cargo`
     bbnote "cargo --version" `cargo --version`
     bbnote cargo build ${CARGO_BUILD_FLAGS}
+    if [ "${CARGO_MAKE_ENABLED}" = "1" ]; then
+        cd ${S}
+        cargo make install_sensor_endpoint
+    fi
     cargo build ${CARGO_BUILD_FLAGS}
 }
 
